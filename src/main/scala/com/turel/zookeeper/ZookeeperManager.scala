@@ -3,6 +3,7 @@ package com.turel.zookeeper
 import java.util.Properties
 import java.util.concurrent.atomic.AtomicBoolean
 
+import com.turel.kafka.BrokersData
 import com.turel.utils.Netcat
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import org.apache.zookeeper.ZooKeeper
@@ -12,7 +13,7 @@ import scala.util.Try
 /**
   * Created by chaimturkel on 12/6/16.
   */
-class ZookeeperInfo(zookeeperHosts: List[String]) extends LazyLogging {
+class ZookeeperManager(zookeeperHosts: List[String]) extends LazyLogging {
   var zookeepers: Map[String, Try[ZooKeeper]] = Map.empty
   val zookeeperParams: List[ZookeeperConnectionInfo] = {
     zookeeperHosts.map(hostPort => {
@@ -36,18 +37,14 @@ class ZookeeperInfo(zookeeperHosts: List[String]) extends LazyLogging {
     }
   }
 
-
-  private def getData(f: (Map[String, ZooKeeper]) => List[String]): List[String] = {
+  def getBrokerHosts(): List[BrokersData] = {
     buildZookeepers()
-    f(activeZookeepers)
-  }
-
-  def getBrokerHosts(): List[String] = {
-    getData((new KafkaBrokersList).getBrokerHosts)
+    (new KafkaBrokersList).getBrokerHosts(activeZookeepers)
   }
 
   def getBrokerTopics(): List[String] = {
-    getData((new KafkaBrokersList).getBrokerTopics)
+    buildZookeepers()
+    (new KafkaBrokersList).getBrokerTopics(activeZookeepers)
   }
 
   def getZookeeperData(): List[ZookeeperData] = {

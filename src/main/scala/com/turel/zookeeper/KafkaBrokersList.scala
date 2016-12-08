@@ -5,6 +5,7 @@ import java.util
 import java.util.Objects
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
+import com.turel.kafka.BrokersData
 import kafka.utils.ZkUtils
 import org.apache.zookeeper.{KeeperException, ZooKeeper}
 
@@ -12,12 +13,12 @@ import org.apache.zookeeper.{KeeperException, ZooKeeper}
   * Created by chaimturkel on 12/6/16.
   */
 class KafkaBrokersList {
-  private def getBrokersList(zookeeper: ZooKeeper, brokerIds: List[String]): List[String] = {
+  private def getBrokersList(zookeeper: ZooKeeper, brokerIds: List[String]): List[BrokersData] = {
     val objectMapper = new ObjectMapper
     brokerIds.map(id => {
       try{
         val brokerInfo: JsonNode = objectMapper.readTree(zookeeper.getData(ZkUtils.BrokerIdsPath + "/" + id, false, null))
-        "ID - %s. Host - %s : %s [V-%s]".format(id,brokerInfo.at("/host").asText(), brokerInfo.at("/port").asText(),brokerInfo.at("/version").asText())
+        BrokersData(id,brokerInfo.at("/host").asText(),brokerInfo.at("/port").asText(),brokerInfo.at("/version").asText())
       }
       catch {
         case _ : KeeperException => null
@@ -43,7 +44,7 @@ class KafkaBrokersList {
   }
 
 
-  private def fetchPath(zookeepers: Map[String, ZooKeeper], path : String, funcData:(ZooKeeper,List[String]) => List[String]): List[String] ={
+  private def fetchPath[T](zookeepers: Map[String, ZooKeeper], path : String, funcData:(ZooKeeper,List[String]) => List[T]): List[T] ={
     if (zookeepers==null || zookeepers.values.size == 0)
       List.empty
     else{
@@ -58,7 +59,7 @@ class KafkaBrokersList {
     }
   }
 
-  def getBrokerHosts(zookeepers: Map[String, ZooKeeper]): List[String] = {
+  def getBrokerHosts(zookeepers: Map[String, ZooKeeper]): List[BrokersData] = {
     fetchPath(zookeepers,ZkUtils.BrokerIdsPath,getBrokersList)
   }
 

@@ -1,9 +1,6 @@
 package com.turel.controllers
 
-import java.util.Properties
-
-import com.turel.config.ZookeeperManager
-import com.turel.zookeeper.ZookeeperData
+import com.turel.config.ZookeeperConfig
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.{GetMapping, RequestMapping}
 class HomeController extends LazyLogging{
 
   @Autowired
-  var zookeeperManager : ZookeeperManager = _
+  var zookeeperConfig : ZookeeperConfig = _
 
   @GetMapping(Array("/"))
   def index() : String ={
@@ -28,9 +25,17 @@ class HomeController extends LazyLogging{
   @RequestMapping(value = Array("/zookeepers"), method = Array(GET))
   def  zookeepersTop(model : Model) : String = {
     import scala.collection.JavaConverters._
-    var list = zookeeperManager.zookeeperInfo.getZookeeperData.asJava
+    var list = zookeeperConfig.zookeeperManager.getZookeeperData.asJava
     model.addAttribute("zookeeperTopDisplay", list);
     "zookeepers";
+  }
+
+  @RequestMapping(value = Array("/brokers"), method = Array(GET))
+  def  brokers(model : Model) : String = {
+    import scala.collection.JavaConverters._
+    var list = zookeeperConfig.zookeeperManager.getBrokerHosts().asJava
+    model.addAttribute("brokersDisplay", list);
+    "brokers";
   }
 
 }
