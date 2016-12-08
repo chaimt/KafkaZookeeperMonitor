@@ -30,8 +30,8 @@ class Application extends ApplicationListener[ContextRefreshedEvent] with  LazyL
 
   override def onApplicationEvent(e: ContextRefreshedEvent): Unit = {
     zookeeperReport.displayZookeeperStatus()
-    zookeeperReport.displayZookeeperBrokers()
-    zookeeperReport.displayZookeeperBrokerTopics()
+//    zookeeperReport.displayZookeeperBrokers()
+//    zookeeperReport.displayZookeeperBrokerTopics()
   }
 }
 

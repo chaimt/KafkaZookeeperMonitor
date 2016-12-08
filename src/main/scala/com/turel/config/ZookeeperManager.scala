@@ -15,16 +15,14 @@ import org.springframework.stereotype.Component
 class ZookeeperManager extends LazyLogging{
 
   @Value("${zookeeper.connections}")
-  private val zookeeperConnections: String = null
+  var zookeeperConnections: String = null
 
   var zookeeperInfo : ZookeeperInfo = _
 
   @PostConstruct
   def init(): Unit ={
     logger.info("Zookeeper Connections: " + zookeeperConnections)
-    val asList: util.List[String] = util.Arrays.asList(zookeeperConnections)
-    import collection.JavaConverters._
-    zookeeperInfo = new ZookeeperInfo(util.Arrays.asList(zookeeperConnections).asScala.toList)
+    zookeeperInfo = new ZookeeperInfo(zookeeperConnections.split(",").toList)
   }
 
 }

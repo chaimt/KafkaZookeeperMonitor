@@ -1,31 +1,53 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Zookeeper TOP</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="refresh" content="5"/>
+    <title>Sticky Table Headers Revisited | Demo 2</title>
+    <meta name="description" content="Sticky Table Headers Revisited: Creating functional and flexible sticky table headers" />
+    <meta name="keywords" content="Sticky Table Headers Revisited" />
+    <meta name="author" content="Codrops" />
+    <link rel="shortcut icon" href="../favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="/css/component.css" />
+    <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 </head>
 <body>
-<table th:if="${not #lists.isEmpty(zookeeperTopDisplay)}">
-    <tr>
-        <th>Connection</th>
-        <th>ruok</th>
-        <th>Mode</th>
-        <th>Node count</th>
-        <th>Received</th>
-        <th>Sent</th>
-        <th>Latency min/avg/max</th>
-    </tr>
-    <tr th:each="item : ${zookeeperTopDisplay}">
-        <td th:text="${item.connection}"/>
-        <td th:text="${item.props.get('ruok')}"/>
-        <td th:text="${item.props.get('Mode')}"/>
-        <td th:text="${item.props.get('Node count')}"/>
-        <td th:text="${item.props.get('Received')}"/>
-        <td th:text="${item.props.get('Sent')}"/>
-        <td th:text="${item.props.get('Latency min/avg/max')}"/>
-    </tr>
-</table>
-
+<div class="container">
+    <div class="component">
+        <h2>Zookeeper Status</h2>
+        <p>Screen will refresh every 5 sec</p>
+        <table>
+            <thead>
+            <tr>
+                <th>Connection</th>
+                <th>ruok</th>
+                <th>Mode</th>
+                <th>Node count</th>
+                <th>Received</th>
+                <th>Sent</th>
+                <th>Latency min/avg/max</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${zookeeperTopDisplay}">
+                <td th:text="${item.connection}"/>
+                <td th:text="${item.props.get('ruok')}"/>
+                <td th:text="${item.props.get('Mode')}"/>
+                <td th:text="${item.props.get('Node count')}"/>
+                <td th:text="${item.props.get('Received')}"/>
+                <td th:text="${item.props.get('Sent')}"/>
+                <td th:text="${item.props.get('Latency min/avg/max')}"/>
+            </tr>
+            </tbody>
+        </table>
+        <p class="filler">Zookeeper Monitor</p>
+    </div>
+</div><!-- /container -->
 </body>
 </html>

@@ -4,6 +4,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 /**
   * Created by chaimturkel on 12/8/16.
+  * you need a local zookeeper for this test to run
   */
 class ZookeeperInfoTest extends FlatSpec with Matchers {
 
@@ -11,7 +12,6 @@ class ZookeeperInfoTest extends FlatSpec with Matchers {
     val zoo  = new ZookeeperInfo(List("localhost"))
     val data: List[ZookeeperData] = zoo.getZookeeperData()
     data.size shouldEqual 1
-//    data(0).props.
   }
 
 }

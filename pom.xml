@@ -150,6 +150,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.turel.config.Application</mainClass>
+                    <executable>true</executable>
+                </configuration>
             </plugin>
             <!--disable surefire-->
             <plugin>
