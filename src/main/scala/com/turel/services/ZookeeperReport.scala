@@ -1,7 +1,7 @@
 package com.turel.services
 
 import com.turel.config.ZookeeperManager
-import org.slf4j.LoggerFactory
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service
   * Created by chaimturkel on 12/8/16.
   */
 @Service
-class ZookeeperReport {
-  val logger = LoggerFactory.getLogger(this.getClass.getSimpleName)
+class ZookeeperReport extends LazyLogging{
 
   @Autowired
   var zookeeperManager : ZookeeperManager = _

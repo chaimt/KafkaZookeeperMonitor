@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Zookeeper TOP</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<table th:if="${not #lists.isEmpty(zookeeperTopDisplay)}">
+    <tr>
+        <th>Connection</th>
+        <th>ruok</th>
+        <th>Mode</th>
+        <th>Node count</th>
+        <th>Received</th>
+        <th>Sent</th>
+        <th>Latency min/avg/max</th>
+    </tr>
+    <tr th:each="item : ${zookeeperTopDisplay}">
+        <td th:text="${item.connection}"/>
+        <td th:text="${item.props.get('ruok')}"/>
+        <td th:text="${item.props.get('Mode')}"/>
+        <td th:text="${item.props.get('Node count')}"/>
+        <td th:text="${item.props.get('Received')}"/>
+        <td th:text="${item.props.get('Sent')}"/>
+        <td th:text="${item.props.get('Latency min/avg/max')}"/>
+    </tr>
+</table>
+
+</body>
+</html>
