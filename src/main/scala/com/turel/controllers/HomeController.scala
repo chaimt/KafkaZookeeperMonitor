@@ -38,4 +38,12 @@ class HomeController extends LazyLogging{
     "brokers";
   }
 
+  @RequestMapping(value = Array("/topics"), method = Array(GET))
+  def  topics(model : Model) : String = {
+    import scala.collection.JavaConverters._
+    var list = zookeeperConfig.zookeeperManager.getBrokerTopics().asJava
+    model.addAttribute("topicsDisplay", list);
+    "topics";
+  }
+
 }

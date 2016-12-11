@@ -4,10 +4,15 @@ import java.io.IOException
 import java.util
 import java.util.Objects
 
+import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
-import com.turel.kafka.BrokersData
+import com.turel.kafka.{BrokersData, PartitionData, TopicsData}
+import com.turel.utils.JsonUtils
 import kafka.utils.ZkUtils
 import org.apache.zookeeper.{KeeperException, ZooKeeper}
+
+import scala.beans.BeanProperty
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 /**
   * Created by chaimturkel on 12/6/16.
@@ -17,7 +22,7 @@ class KafkaBrokersList {
     val objectMapper = new ObjectMapper
     brokerIds.map(id => {
       try{
-        val brokerInfo: JsonNode = objectMapper.readTree(zookeeper.getData(ZkUtils.BrokerIdsPath + "/" + id, false, null))
+        val brokerInfo: JsonNode = objectMapper.readTree(zookeeper.getData(ZkUtils.BrokerIdsPath+s"/$id", false, null))
         BrokersData(id,brokerInfo.at("/host").asText(),brokerInfo.at("/port").asText(),brokerInfo.at("/version").asText())
       }
       catch {
@@ -28,12 +33,26 @@ class KafkaBrokersList {
     }).filter(Objects.nonNull).distinct
   }
 
-  private def getTopicList(zookeeper: ZooKeeper, brokerIds: List[String]): List[String] = {
+  private def getTopicList(zookeeper: ZooKeeper, topics: List[String]): List[TopicsData] = {
     val objectMapper = new ObjectMapper
-    brokerIds.map(id => {
+    topics.map(topic => {
       try{
-        val brokerInfo: JsonNode = objectMapper.readTree(zookeeper.getData(ZkUtils.BrokerTopicsPath, false, null))
-        "ID - %s. Host - %s : %s [V-%s]".format(id,brokerInfo.at("/host").asText(), brokerInfo.at("/port").asText(),brokerInfo.at("/version").asText())
+        val topicInfo: JsonNode = objectMapper.readTree(zookeeper.getData(ZkUtils.BrokerTopicsPath + s"/$topic", false, null))
+        val partitions = topicInfo.at("/partitions").elements()
+        var  paritions : ArrayBuffer[PartitionData] = ArrayBuffer()
+        while (partitions.hasNext){
+          val next : ArrayNode = partitions.next().asInstanceOf[ArrayNode]
+          if (next.size()>0) {
+            val node = next.get(0)
+            val partitionId = node.asText()
+            val state: JsonNode = objectMapper.readTree(zookeeper.getData(s"/brokers/topics/$topic/partitions/$partitionId/state", false, null))
+
+            if (state != null) {
+              paritions += PartitionData(JsonUtils.getText(state, "controller_epoch"), JsonUtils.getText(state, "leader"), JsonUtils.getText(state, "leader_epoch"), JsonUtils.getText(state, "isr"))
+            }
+          }
+        }
+        TopicsData(topic,topicInfo.at("/version").asText(),paritions.toList)
       }
       catch {
         case _ : KeeperException => null
@@ -50,7 +69,7 @@ class KafkaBrokersList {
     else{
       import collection.JavaConverters._
       val firstActive = zookeepers.values.iterator.next
-      val children: util.List[String] = firstActive.getChildren(ZkUtils.BrokerIdsPath, false)
+      val children: util.List[String] = firstActive.getChildren(path, false)
       val data = funcData(firstActive, children.asScala.toList)
       if (data==null)
         List.empty
@@ -63,8 +82,8 @@ class KafkaBrokersList {
     fetchPath(zookeepers,ZkUtils.BrokerIdsPath,getBrokersList)
   }
 
-  def getBrokerTopics(zookeepers: Map[String, ZooKeeper]): List[String] = {
-    fetchPath(zookeepers,ZkUtils.BrokerIdsPath,getTopicList)
+  def getBrokerTopics(zookeepers: Map[String, ZooKeeper]): List[TopicsData] = {
+    fetchPath(zookeepers,ZkUtils.BrokerTopicsPath,getTopicList)
   }
 
 

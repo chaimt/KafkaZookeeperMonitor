@@ -3,7 +3,7 @@ package com.turel.zookeeper
 import java.util.Properties
 import java.util.concurrent.atomic.AtomicBoolean
 
-import com.turel.kafka.BrokersData
+import com.turel.kafka.{BrokersData, TopicsData}
 import com.turel.utils.Netcat
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import org.apache.zookeeper.ZooKeeper
@@ -29,12 +29,14 @@ class ZookeeperManager(zookeeperHosts: List[String]) extends LazyLogging {
   val built = new AtomicBoolean(false)
 
 
-  def activeZookeepers = zookeepers.filter(item => item._2.isSuccess).map(item => (item._1, item._2.get))
+  def activeZookeepers = {
+    zookeepers.filter(item => item._2.isSuccess).map(item => (item._1, item._2.get))
+  }
 
   def buildZookeepers() {
-    if (!built.getAndSet(true)) {
+//    if (!built.getAndSet(true)) {
       zookeepers = zookeeperHosts.map(host => (host, Try(new ZooKeeper(host, 10000, null)))).toMap
-    }
+//    }
   }
 
   def getBrokerHosts(): List[BrokersData] = {
@@ -42,7 +44,7 @@ class ZookeeperManager(zookeeperHosts: List[String]) extends LazyLogging {
     (new KafkaBrokersList).getBrokerHosts(activeZookeepers)
   }
 
-  def getBrokerTopics(): List[String] = {
+  def getBrokerTopics(): List[TopicsData] = {
     buildZookeepers()
     (new KafkaBrokersList).getBrokerTopics(activeZookeepers)
   }
