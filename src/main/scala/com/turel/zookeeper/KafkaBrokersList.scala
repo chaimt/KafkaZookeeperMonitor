@@ -11,7 +11,7 @@ import com.turel.utils.JsonUtils
 import kafka.utils.ZkUtils
 import org.apache.zookeeper.{KeeperException, ZooKeeper}
 
-import scala.beans.BeanProperty
+import collection.JavaConverters._
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 /**
@@ -52,7 +52,7 @@ class KafkaBrokersList {
             }
           }
         }
-        TopicsData(topic,topicInfo.at("/version").asText(),paritions.toList)
+        TopicsData(topic,topicInfo.at("/version").asText(),paritions.asJava)
       }
       catch {
         case _ : KeeperException => null
@@ -67,7 +67,6 @@ class KafkaBrokersList {
     if (zookeepers==null || zookeepers.values.size == 0)
       List.empty
     else{
-      import collection.JavaConverters._
       val firstActive = zookeepers.values.iterator.next
       val children: util.List[String] = firstActive.getChildren(path, false)
       val data = funcData(firstActive, children.asScala.toList)
