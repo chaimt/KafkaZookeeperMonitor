@@ -33,8 +33,8 @@ class AkkaConfig extends LazyLogging {
     val system = ActorSystem
       .create("ZookeeperKafaManager", akkaConfiguration())
     springExtension.initialize(applicationContext)
-//    val of: ActorRef = system.actorOf(springExtension.props(BaseActor.zookeeperManagerActorId))
-    system.actorOf(Props(classOf[ZookeeperManagerActor]),BaseActor.zookeeperManagerActorId)
+    system.actorOf(springExtension.props(BaseActor.zookeeperManagerActorId),BaseActor.zookeeperManagerActorId)
+//    val of1 = system.actorOf(Props(classOf[ZookeeperManagerActor]),BaseActor.zookeeperManagerActorId)
     logger.info("akka started")
     system
   }

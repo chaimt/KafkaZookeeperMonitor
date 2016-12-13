@@ -3,22 +3,25 @@ package com.turel.actors.zookeeper
 import java.util.Properties
 
 import akka.actor.SupervisorStrategy.Restart
-import akka.actor.{ActorRef, OneForOneStrategy, Props}
+import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props}
 import com.turel.actors.BaseActor
 import com.turel.utils.Netcat
 import com.turel.zookeeper.{ZookeeperCommands, ZookeeperConnectionInfo, ZookeeperData}
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.beans.factory.config.ConfigurableBeanFactory
+import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
 /**
   * Created by chaimturkel on 12/11/16.
   */
-//@Component("zookeeperManagerActor")
-class ZookeeperManagerActor extends BaseActor with LazyLogging {
+@Component("zookeeperManagerActor")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+class ZookeeperManagerActor extends Actor with LazyLogging {
 
   @Value("${zookeeper.connections}")
-  val zookeeperConnections: String = "localhost"
+  val zookeeperConnections: String = null
 
   var reportRequest: Option[ActorRef] = None
   var zookeepers: Map[ActorRef, ZookeeperConnectionInfo] = Map.empty

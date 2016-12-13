@@ -42,7 +42,7 @@
         <commons-net.version>2.0</commons-net.version>
         <unix4j-core.version>0.4</unix4j-core.version>
         <scala-logging-slf4j_2.11.version>2.1.2</scala-logging-slf4j_2.11.version>
-        <akka-actor_2.11.version>2.4.14</akka-actor_2.11.version>
+        <akka-actor_2.11.version>2.4.1</akka-actor_2.11.version>
     </properties>
 
     <dependencies>
