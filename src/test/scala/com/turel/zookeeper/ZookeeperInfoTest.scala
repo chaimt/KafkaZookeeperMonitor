@@ -8,10 +8,10 @@ import org.scalatest.{FlatSpec, Matchers}
   */
 class ZookeeperInfoTest extends FlatSpec with Matchers {
 
-  "localhost zookeeper" should "show get data informtion" in{
-    val zoo  = new ZookeeperManager(List("localhost"))
-    val data: List[ZookeeperData] = zoo.getZookeeperData()
-    data.size shouldEqual 1
-  }
+//  "localhost zookeeper" should "show get data informtion" in{
+//    val zoo  = new ZookeeperManager(List("localhost"))
+//    val data: List[ZookeeperData] = zoo.getZookeeperData()
+//    data.size shouldEqual 1
+//  }
 
 }

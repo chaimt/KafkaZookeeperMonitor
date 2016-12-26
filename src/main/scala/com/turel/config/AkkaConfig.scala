@@ -1,8 +1,7 @@
 package com.turel.config
 
-import akka.actor.{ActorRef, ActorSelection, ActorSystem, Props}
+import akka.actor.ActorSystem
 import com.turel.actors.BaseActor
-import com.turel.actors.zookeeper.{ZookeeperActor, ZookeeperManagerActor, ZookeeperStatusRequest}
 import com.turel.utils.spring.SpringExtention
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.slf4j.LazyLogging
@@ -33,8 +32,9 @@ class AkkaConfig extends LazyLogging {
     val system = ActorSystem
       .create("ZookeeperKafaManager", akkaConfiguration())
     springExtension.initialize(applicationContext)
+
+    //init base actors
     system.actorOf(springExtension.props(BaseActor.zookeeperManagerActorId),BaseActor.zookeeperManagerActorId)
-//    val of1 = system.actorOf(Props(classOf[ZookeeperManagerActor]),BaseActor.zookeeperManagerActorId)
     logger.info("akka started")
     system
   }

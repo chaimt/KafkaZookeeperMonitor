@@ -11,8 +11,8 @@ import com.turel.utils.JsonUtils
 import kafka.utils.ZkUtils
 import org.apache.zookeeper.{KeeperException, ZooKeeper}
 
-import collection.JavaConverters._
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.JavaConverters._
+import scala.collection.mutable.ArrayBuffer
 
 /**
   * Created by chaimturkel on 12/6/16.

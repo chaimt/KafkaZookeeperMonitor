@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod._
 import org.springframework.web.bind.annotation.{GetMapping, RequestMapping}
 import org.springframework.web.context.request.async.DeferredResult
 
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 /**
   * Created by chaimturkel on 12/8/16.
@@ -44,7 +44,8 @@ class HomeController extends LazyLogging {
       case answer => {
         val zooList = answer.asInstanceOf[ZookeeperStatusDataResponse]
         import scala.collection.JavaConverters._
-        var list = zooList.data.asJava
+        val d = zooList.data
+        var list = d.asJava
         model.addAttribute("zookeeperTopDisplay", list);
         result.setResult("zookeepers")
       }

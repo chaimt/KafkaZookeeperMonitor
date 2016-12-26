@@ -1,13 +1,52 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Kafka and Zookeeper Monitor!</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    </head>
-    <body>
-        <p>Kafka and Zookeeper Monitor!</p>
-        <a href="/zookeepers.html">Zookeeper TOP</a>
-        <a href="/brokers.html">Brokers</a>
-        <a href="/topics.html">Topics</a>
-    </body>
+<head>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+
+<script>
+    function myFunction(htmlSrc) {
+        document.getElementById("content").innerHTML = '<iframe src="' + htmlSrc + '" width="100%" height="1000"></iframe>';
+    }
+</script>
+
+<body>
+
+<ul>
+    <li><a onclick="myFunction('zookeepers.html')">Zookeeper TOP</a></li>
+    <li><a onclick="myFunction('brokers.html')">Brokers</a></li>
+    <li><a onclick="myFunction('topics.html')">Topics</a></li>
+</ul>
+
+<div id="content"></div>
+
+</body>
 </html>

@@ -1,12 +1,8 @@
 package com.turel.actors.zookeeper
 
-import java.util.Properties
-
 import akka.actor.SupervisorStrategy.Restart
 import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props}
-import com.turel.actors.BaseActor
-import com.turel.utils.Netcat
-import com.turel.zookeeper.{ZookeeperCommands, ZookeeperConnectionInfo, ZookeeperData}
+import com.turel.zookeeper.{ZookeeperConnectionInfo, ZookeeperData}
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.beans.factory.config.ConfigurableBeanFactory
@@ -65,8 +61,8 @@ class ZookeeperManagerActor extends Actor with LazyLogging {
     case ZookeeperStatusRequest => {
       reportRequest = Some(sender())
       zookeepers.keys.foreach(_ ! ZookeeperStatusRequest)
-      import scala.concurrent.duration._
       import scala.concurrent.ExecutionContext.Implicits.global
+      import scala.concurrent.duration._
       context.system.scheduler.scheduleOnce(1 seconds, self, Timeout)
     }
 
