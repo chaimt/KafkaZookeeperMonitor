@@ -35,7 +35,9 @@ class KafkaBrokersList {
 
   private def getTopicList(zookeeper: ZooKeeper, topics: List[String]): List[TopicsData] = {
     val objectMapper = new ObjectMapper
-    topics.map(topic => {
+    topics
+      .filter(_ != "__consumer_offsets") //ignore kafka topics
+      .map(topic => {
       try{
         val topicInfo: JsonNode = objectMapper.readTree(zookeeper.getData(ZkUtils.BrokerTopicsPath + s"/$topic", false, null))
         val partitions = topicInfo.at("/partitions").elements()

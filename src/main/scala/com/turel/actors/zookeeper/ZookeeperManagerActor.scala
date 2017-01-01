@@ -29,12 +29,10 @@ class ZookeeperManagerActor extends Actor with LazyLogging {
     zookeepers = zookeeperHosts.map(hostPort => {
       val split: Array[String] = hostPort.split(":")
       if (split.size == 1) {
-        logger.info("split.size == 1")
         val actor = context.actorOf(Props(classOf[ZookeeperActor],hostPort, 2181), hostPort)
         (actor, ZookeeperConnectionInfo(hostPort, 2181))
       }
       else {
-        logger.info("split.size == 1 else")
         val port = Integer.parseInt(split(1))
         val actor = context.actorOf(Props(classOf[ZookeeperActor],split(0), port),hostPort)
         (actor, ZookeeperConnectionInfo(hostPort, port))
